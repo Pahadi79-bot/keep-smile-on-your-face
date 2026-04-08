@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Always be Happy Aarushi ❤️</title>
+
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  overflow: hidden;
+}
+
+.container {
+  padding: 20px;
+  margin-top: 40px;
+}
+
+h1 {
+  color: white;
+  font-size: 24px;
+}
+
+#typing {
+  color: white;
+  font-size: 16px;
+  line-height: 1.6;
+  border-right: 2px solid white;
+  display: inline-block;
+  padding-right: 5px;
+  min-height: 80px;
+}
+
+button {
+  margin: 10px;
+  padding: 12px 18px;
+  font-size: 14px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+#yes {
+  background-color: #28a745;
+  color: white;
+}
+
+#no {
+  background-color: #dc3545;
+  color: white;
+  position: absolute;
+}
+
+.tap-note {
+  color: white;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.heart {
+  position: fixed;
+  color: red;
+  animation: float 5s linear infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(100vh); }
+  100% { transform: translateY(-10vh); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🎵 YOUR SONG -->
+<audio id="bgMusic" loop>
+  <source src="Teri Muskurahat Hai Takat Meri.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container">
+
+<h1>I always want to see you happy 😊❤️</h1>
+
+<p id="typing"></p>
+
+<button id="yes" onclick="forgive()">Make promise to me to always keep cute smile 😊❤️</button>
+<button id="no" onmouseover="moveButton()" ontouchstart="moveButton()">NO button here 💔</button>
+
+<div class="tap-note">(Tap anywhere to start music 🎵)</div>
+
+</div>
+
+<script>
+let playerStarted = false;
+
+// 🎬 Start cinematic
+function startCinematic() {
+  if (playerStarted) return;
+  playerStarted = true;
+
+  const music = document.getElementById("bgMusic");
+  music.volume = 0;
+
+  music.play().then(() => {
+    let vol = 0;
+    let fade = setInterval(() => {
+      if (vol < 1) {
+        vol += 0.05;
+        music.volume = vol;
+      } else {
+        clearInterval(fade);
+      }
+    }, 200);
+  }).catch(() => {
+    alert("Tap again to start music 🎵");
+  });
+
+  setTimeout(typeLine, 500);
+}
+
+document.body.addEventListener("click", startCinematic, { once: true });
+document.body.addEventListener("touchstart", startCinematic, { once: true });
+
+// ❤️ Typing text
+const lines = [
+  "Aarushi, I don't know what is going on with you...",
+  "But trust me, no matter what happens, I will always be with you ❤️‍🩹",
+  "You mean everything to me 💖",
+  "Please stay happy 😊",
+  "If agree tap on promise button 👉",
+  "If disagree tap on no button, but it also hurt me alot 💔",
+  "Ek baat batana to bhool gaya… NO ka option actually hai hi nhi 🤭"
+];
+
+let lineIndex = 0;
+let charIndex = 0;
+
+function typeLine() {
+  if (lineIndex < lines.length) {
+    if (charIndex < lines[lineIndex].length) {
+      document.getElementById("typing").innerHTML += lines[lineIndex].charAt(charIndex);
+      charIndex++;
+      setTimeout(typeLine, 40);
+    } else {
+      document.getElementById("typing").innerHTML += "<br><br>";
+      lineIndex++;
+      charIndex = 0;
+      setTimeout(typeLine, 900);
+    }
+  }
+}
+
+// 💖 HEART EXPLOSION
+function createExplosion() {
+  for (let i = 0; i < 50; i++) {
+    const heart = document.createElement("div");
+    heart.innerHTML = "💖";
+    heart.style.position = "fixed";
+    heart.style.left = "50%";
+    heart.style.top = "50%";
+    heart.style.fontSize = "20px";
+    heart.style.pointerEvents = "none";
+
+    document.body.appendChild(heart);
+
+    const angle = Math.random() * 2 * Math.PI;
+    const distance = Math.random() * 250 + 100;
+
+    const x = Math.cos(angle) * distance;
+    const y = Math.sin(angle) * distance;
+
+    heart.animate([
+      { transform: "translate(-50%, -50%) scale(1)", opacity: 1 },
+      { transform: `translate(${x}px, ${y}px) scale(0.5)`, opacity: 0 }
+    ], {
+      duration: 1200,
+      easing: "ease-out"
+    });
+
+    setTimeout(() => heart.remove(), 1200);
+  }
+}
+
+// 💥 YES BUTTON
+function forgive() {
+  createExplosion();
+
+  setTimeout(() => {
+    alert("Thanks Aarushi 😇 I promise I'll always be with you ❤️");
+  }, 800);
+}
+
+// 😂 RUNNING BUTTON
+function moveButton() {
+  let btn = document.getElementById("no");
+  let x = Math.random() * (window.innerWidth - btn.offsetWidth);
+  let y = Math.random() * (window.innerHeight - btn.offsetHeight);
+  btn.style.left = x + "px";
+  btn.style.top = y + "px";
+}
+
+// ❤️ FLOATING HEARTS
+setInterval(() => {
+  const heart = document.createElement("div");
+  heart.classList.add("heart");
+  heart.innerHTML = "❤️😊";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = (Math.random() * 20 + 10) + "px";
+  document.body.appendChild(heart);
+
+  setTimeout(() => heart.remove(), 5000);
+}, 300);
+</script>
+
+</body>
+</html>
