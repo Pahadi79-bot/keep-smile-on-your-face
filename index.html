@@ -98,7 +98,7 @@ button {
   z-index:1003;
   font-size:22px;
   opacity:0;
-  transition: opacity 2s;
+  transition: opacity 1.2s ease;
 }
 
 /* Video */
@@ -110,6 +110,8 @@ button {
   height:100%;
   object-fit:cover;
   z-index:1002;
+  opacity:1;
+  transition: opacity 0.8s ease;
 }
 </style>
 </head>
@@ -250,30 +252,52 @@ function startFinal(){
 function playVideo(){
  let v=videoPlayer;
  v.style.display="block";
- v.style.opacity=0;
+ v.style.opacity=1;
  v.play();
-
- let op=0;
- let fade=setInterval(()=>{
-   if(op<1){op+=0.05; v.style.opacity=op;}
-   else clearInterval(fade);
- },100);
 
  v.onended = showEnding;
 }
 
-// ending
+// ✨ SMOOTH TRANSITION HERE
 function showEnding(){
- videoPlayer.style.display="none";
- let e=ending;
- e.style.display="flex";
- setTimeout(()=>e.style.opacity=1,100);
+ let v = videoPlayer;
+
+ let op = 1;
+ let fadeOut = setInterval(()=>{
+   if(op > 0){
+     op -= 0.05;
+     v.style.opacity = op;
+   } else {
+     clearInterval(fadeOut);
+     v.style.display = "none";
+     showEndingText();
+   }
+ },80);
+}
+
+function showEndingText(){
+ let e = ending;
+ e.style.display = "flex";
+ e.style.opacity = 0;
+
+ let op = 0;
+ let fadeIn = setInterval(()=>{
+   if(op < 1){
+     op += 0.05;
+     e.style.opacity = op;
+   } else {
+     clearInterval(fadeIn);
+   }
+ },80);
 }
 
 // moving bunny button
 function moveButton(){
- no.style.left=Math.random()*300+"px";
- no.style.top=Math.random()*400+"px";
+ let maxX = window.innerWidth - no.offsetWidth;
+ let maxY = window.innerHeight - no.offsetHeight;
+
+ no.style.left = Math.random()*maxX + "px";
+ no.style.top = Math.random()*maxY + "px";
 }
 </script>
 
