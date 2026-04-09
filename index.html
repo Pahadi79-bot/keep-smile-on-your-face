@@ -16,31 +16,35 @@ body {
   overflow: hidden;
 }
 
-.container {
-  padding: 20px;
-  margin-top: 40px;
-}
-
-h1 {
-  color: white;
-}
-
-#typing {
-  color: white;
-  font-size: 16px;
-  border-right: 2px solid white;
-}
-
 /* Buttons */
 button {
   margin: 10px;
   padding: 12px 18px;
   border-radius: 20px;
   border: none;
+  cursor: pointer;
 }
 
-#yes { background: green; color: white; }
-#no { background: red; color: white; position: absolute; }
+#yes {
+  background: #28a745;
+  color: white;
+}
+
+/* 🐰 Bunny NO Button */
+#no {
+  position: absolute;
+  background: #fff;
+  color: #ff4d6d;
+  font-size: 14px;
+  border-radius: 50px;
+  padding: 12px 20px;
+  border: 2px solid #ff4d6d;
+}
+
+#no::before {
+  content: "🐰";
+  margin-right: 6px;
+}
 
 /* Popup */
 #popup {
@@ -55,7 +59,14 @@ button {
   z-index:999;
 }
 
-/* Cinematic screen */
+/* ✨ Glow animation */
+@keyframes glow {
+  0% { text-shadow: 0 0 10px #fff; }
+  50% { text-shadow: 0 0 25px #ff4d6d, 0 0 40px #ff7eb3; }
+  100% { text-shadow: 0 0 10px #fff; }
+}
+
+/* Cinematic */
 #cinematic {
   display:none;
   position:fixed;
@@ -67,7 +78,25 @@ button {
   align-items:center;
   flex-direction:column;
   z-index:1001;
-  font-size:28px;
+  font-size:32px;
+  opacity:0;
+  transition: opacity 2s;
+  animation: glow 2s infinite;
+}
+
+/* Ending */
+#ending {
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:black;
+  color:white;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  z-index:1003;
+  font-size:22px;
   opacity:0;
   transition: opacity 2s;
 }
@@ -91,15 +120,13 @@ button {
   <source src="Teri Muskurahat Hai Takat Meri.mp3" type="audio/mpeg">
 </audio>
 
-<div class="container">
-<h1>I always want to see you happy 😊❤️</h1>
-<p id="typing"></p>
+<h2 style="color:white;">I always want to see you happy 😊❤️</h2>
+<p id="typing" style="color:white;"></p>
 
-<button onclick="forgive()">Make promise to always keep cute smile 😊❤️</button>
-<button id="no" onmouseover="moveButton()" ontouchstart="moveButton()">NO 😢</button>
+<button id="yes" onclick="forgive()">Make promise to always keep cute smile 😊❤️</button>
+<button id="no" onmouseover="moveButton()" ontouchstart="moveButton()">NO 💔</button>
 
 <p style="color:white">(Tap to start music)</p>
-</div>
 
 <!-- Popup -->
 <div id="popup">
@@ -117,24 +144,29 @@ button {
   <source src="video.mp4" type="video/mp4">
 </video>
 
+<!-- Ending -->
+<div id="ending">
+  <div>I miss you alot ❤️‍🩹<br>plz jaldi se pehle jaisi ho jao 🥺</div>
+</div>
+
 <script>
 let started=false;
 
 document.body.addEventListener("click", ()=>{
-  if(started) return;
-  started=true;
+ if(started) return;
+ started=true;
 
-  let m=document.getElementById("bgMusic");
-  m.volume=0;
-  m.play();
+ let m=bgMusic;
+ m.volume=0;
+ m.play();
 
-  let v=0;
-  let fade=setInterval(()=>{
-    if(v<1){v+=0.05; m.volume=v;}
-    else clearInterval(fade);
-  },200);
+ let v=0;
+ let fade=setInterval(()=>{
+   if(v<1){v+=0.05; m.volume=v;}
+   else clearInterval(fade);
+ },200);
 
-  setTimeout(typeLine,500);
+ setTimeout(typeLine,500);
 },{once:true});
 
 // typing
@@ -145,7 +177,7 @@ let lines=[
 "Please stay happy 😊",
 "If agree tap on promise button 👉🏻",
 "If disagree tap on NO, but it also hurt me alot 💔",
-"But ek baat to btana bhool hi gya NO ka option hai hi nhi 🤭"
+"Ek baat to btana bhul hi gya NO ka option hai hi nhi🤭"
 ];
 
 let i=0,j=0;
@@ -188,54 +220,60 @@ function createExplosion(){
 
 function forgive(){
  createExplosion();
- setTimeout(()=>{
-  popup.style.display="flex";
- },700);
+ setTimeout(()=>popup.style.display="flex",700);
 }
 
-// final cinematic
+// cinematic transition
 function startFinal(){
  popup.style.display="none";
 
- let m=document.getElementById("bgMusic");
+ let m=bgMusic;
 
- // fade out music
  let fade=setInterval(()=>{
-  if(m.volume>0){
-    m.volume-=0.05;
-  }else{
-    clearInterval(fade);
-    m.pause();
-  }
- },200);
+   if(m.volume>0){m.volume-=0.05;}
+   else{clearInterval(fade); m.pause();}
+ },150);
 
- let c=document.getElementById("cinematic");
+ let c=cinematic;
  c.style.display="flex";
 
- setTimeout(()=>{c.style.opacity=1;},100);
+ setTimeout(()=>c.style.opacity=1,100);
+ setTimeout(()=>c.style.opacity=0,2500);
 
  setTimeout(()=>{
-  c.style.opacity=0;
- },2500);
-
- setTimeout(()=>{
-  c.style.display="none";
-  playVideo();
+   c.style.display="none";
+   playVideo();
  },4000);
 }
 
 // play video
 function playVideo(){
- let v=document.getElementById("videoPlayer");
+ let v=videoPlayer;
  v.style.display="block";
+ v.style.opacity=0;
  v.play();
+
+ let op=0;
+ let fade=setInterval(()=>{
+   if(op<1){op+=0.05; v.style.opacity=op;}
+   else clearInterval(fade);
+ },100);
+
+ v.onended = showEnding;
 }
 
-// moving button
+// ending
+function showEnding(){
+ videoPlayer.style.display="none";
+ let e=ending;
+ e.style.display="flex";
+ setTimeout(()=>e.style.opacity=1,100);
+}
+
+// moving bunny button
 function moveButton(){
- let b=document.getElementById("no");
- b.style.left=Math.random()*300+"px";
- b.style.top=Math.random()*400+"px";
+ no.style.left=Math.random()*300+"px";
+ no.style.top=Math.random()*400+"px";
 }
 </script>
 
