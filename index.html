@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -72,6 +72,34 @@ button {
   0% { transform: translateY(100vh); }
   100% { transform: translateY(-10vh); }
 }
+
+/* 💖 Popup */
+#popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 999;
+  text-align: center;
+}
+
+/* 🎬 Video */
+#videoPlayer {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1000;
+}
 </style>
 </head>
 
@@ -95,13 +123,30 @@ button {
 
 </div>
 
-<script>
-let playerStarted = false;
+<!-- 💖 Popup -->
+<div id="popup">
+  <h2 style="color:white;">
+    Thanks Aarushi 😇<br>
+    I promise I'll always be with you ❤️
+  </h2>
 
-// 🎬 Start cinematic
+  <button onclick="playVideo()" style="margin-top:20px; padding:12px 20px; border:none; border-radius:20px; background:#ff4d6d; color:white;">
+    Are you ready for next surprise? 💖
+  </button>
+</div>
+
+<!-- 🎬 Video -->
+<video id="videoPlayer" controls>
+  <source src="yourvideo.mp4" type="video/mp4">
+</video>
+
+<script>
+let started = false;
+
+// 🎬 Start music + typing
 function startCinematic() {
-  if (playerStarted) return;
-  playerStarted = true;
+  if (started) return;
+  started = true;
 
   const music = document.getElementById("bgMusic");
   music.volume = 0;
@@ -116,8 +161,6 @@ function startCinematic() {
         clearInterval(fade);
       }
     }, 200);
-  }).catch(() => {
-    alert("Tap again to start music 🎵");
   });
 
   setTimeout(typeLine, 500);
@@ -126,14 +169,13 @@ function startCinematic() {
 document.body.addEventListener("click", startCinematic, { once: true });
 document.body.addEventListener("touchstart", startCinematic, { once: true });
 
-// ❤️ Typing text
+// ❤️ Typing
 const lines = [
   "Aarushi, I don't know what is going on with you...",
   "But trust me, no matter what happens, I will always be with you ❤️‍🩹",
   "You mean everything to me 💖",
   "Please stay happy 😊",
   "If agree tap on promise button 👉",
-  "If disagree tap on no button, but it also hurt me alot 💔",
   "Ek baat batana to bhool gaya… NO ka option actually hai hi nhi 🤭"
 ];
 
@@ -155,7 +197,7 @@ function typeLine() {
   }
 }
 
-// 💖 HEART EXPLOSION
+// 💖 Explosion
 function createExplosion() {
   for (let i = 0; i < 50; i++) {
     const heart = document.createElement("div");
@@ -164,7 +206,6 @@ function createExplosion() {
     heart.style.left = "50%";
     heart.style.top = "50%";
     heart.style.fontSize = "20px";
-    heart.style.pointerEvents = "none";
 
     document.body.appendChild(heart);
 
@@ -186,16 +227,25 @@ function createExplosion() {
   }
 }
 
-// 💥 YES BUTTON
+// 💥 Promise button
 function forgive() {
   createExplosion();
 
   setTimeout(() => {
-    alert("Thanks Aarushi 😇 I promise I'll always be with you ❤️");
+    document.getElementById("popup").style.display = "flex";
   }, 800);
 }
 
-// 😂 RUNNING BUTTON
+// 🎬 Play video
+function playVideo() {
+  document.getElementById("popup").style.display = "none";
+
+  let video = document.getElementById("videoPlayer");
+  video.style.display = "block";
+  video.play();
+}
+
+// 😂 Moving button
 function moveButton() {
   let btn = document.getElementById("no");
   let x = Math.random() * (window.innerWidth - btn.offsetWidth);
@@ -204,11 +254,11 @@ function moveButton() {
   btn.style.top = y + "px";
 }
 
-// ❤️ FLOATING HEARTS
+// ❤️ Floating hearts
 setInterval(() => {
   const heart = document.createElement("div");
   heart.classList.add("heart");
-  heart.innerHTML = "❤️😊";
+  heart.innerHTML = "❤️";
   heart.style.left = Math.random() * 100 + "vw";
   heart.style.fontSize = (Math.random() * 20 + 10) + "px";
   document.body.appendChild(heart);
